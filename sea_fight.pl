@@ -68,7 +68,7 @@ sub check_position
 sub set_one
 {
   my $rand = int(rand(9));
-  my $i = int(rand(0));
+  my $i = int(rand(9));
   # если точка свободна (т.е. == 0), то проверяем соседей
     unless ($A->[$i][$rand])
     {

@@ -171,14 +171,14 @@ sub set_four
 sub check_neighbors
 {
   my ( $x, $y ) = @_;
-
+ # если заняты соседние то return 0
   if(_is_busy_top($x, $y) or _is_busy_left($x, $y) or _is_busy_right($x, $y) or _is_busy_bottom($x, $y) or _is_busy_cross_left_top($x, $y) or _is_busy_cross_right_top($x, $y) or _is_busy_cross_left_bottom($x, $y) or _is_busy_cross_right__bottom($x, $y))
   {
-    return 1;
+    return 0;
   }
   else
   {
-    return 0;
+    return 1;
   }
 }
 # текущая ячейка

@@ -44,7 +44,7 @@ sub init_ships
   {
     my $res = check_position($s);
     # если не присвоили - ставим в конец очереди, чтобы потом снова попробовать присвоить
-    unshift(@ships, $s) unless ($res);     
+    unshift(@ships, $s) unless ($res);
   }
 }
 
@@ -70,91 +70,193 @@ sub set_one
   my $rand = int(rand(9));
   my $i = int(rand(9));
   # если точка свободна (т.е. == 0), то проверяем соседей
-    unless ($A->[$i][$rand])
+    unless (_is_busy($i,$rand))
     {
-      # если i нуль
-      if($i == 0 and $rand != 0)
+      # проверяем соседей
+      if(check_neighbors($i,$rand))
       {
-        # если занят хотя бы один из соседей
-        if($A->[$i][$rand-1] or $A->[$i][$rand+1] or $A->[$i][$rand]
-          or $A->[$i+1][$rand-1] or $A->[$i+1][$rand] or $A->[$i+1][$rand+1])
-        {
-          return 0;
-        }
-        else
-        {
-          $A->[$i][$rand] = 1;
-          return 1;
-        }
-      }
-      # если rand 0 и i не 0
-      elsif($rand == 0 and $i != 0)
-      {
-        if($A->[$i][$rand] or $A->[$i][$rand+1] or $A->[$i-1][$rand]
-          or $A->[$i-1][$rand+1] or $A->[$i+1][$rand] or $A->[$i+1][$rand+1])
-        {
-          return 0;
-        }
-        else
-        {
-          $A->[$i][$rand] = 1;
-          return 1;
-        }
-      }
-      # если все нуль
-      elsif($rand == 0 and $i == 0)
-      {
-        if($A->[$i][$rand] or $A->[$i][$rand+1] or $A->[$i+1][$rand] or $A->[$i+1][$rand] or $A->[$i+1][$rand+1])
-        {
-          return 0;
-        }
-        else
-        {
-          $A->[$i][$rand] = 1;
-          return 1;
-        }
+        $A->[$i][$rand] = 1;
+        return 1;
       }
       else
       {
-         if($A->[$i][$rand-1] or $A->[$i][$rand+1] or $A->[$i-1][$rand-1] or $A->[$i-1][$rand]
-          or $A->[$i-1][$rand+1] or $A->[$i+1][$rand-1] or $A->[$i+1][$rand] or $A->[$i+1][$rand+1])
-        {
-          return 0;
-        }
-        else
-        {
-          $A->[$i][$rand] = 1;
-          return 1;
-        }
+        return 0;
       }
-      
-  }
-  # если занято, то return 0
-  else
-    {
-      return 0;
+
+      # если i нуль
+      # if($i == 0 and $rand != 0)
+      # {
+      #   # если занят хотя бы один из соседей
+      #   if($A->[$i][$rand-1] or $A->[$i][$rand+1] or $A->[$i][$rand]
+      #     or $A->[$i+1][$rand-1] or $A->[$i+1][$rand] or $A->[$i+1][$rand+1])
+      #   {
+      #     return 0;
+      #   }
+      #   else
+      #   {
+      #     $A->[$i][$rand] = 1;
+      #     return 1;
+      #   }
+      # }
+      # # если rand 0 и i не 0
+      # elsif($rand == 0 and $i != 0)
+      # {
+      #   if($A->[$i][$rand] or $A->[$i][$rand+1] or $A->[$i-1][$rand]
+      #     or $A->[$i-1][$rand+1] or $A->[$i+1][$rand] or $A->[$i+1][$rand+1])
+      #   {
+      #     return 0;
+      #   }
+      #   else
+      #   {
+      #     $A->[$i][$rand] = 1;
+      #     return 1;
+      #   }
+      # }
+      # # если все нуль
+      # elsif($rand == 0 and $i == 0)
+      # {
+      #   if($A->[$i][$rand] or $A->[$i][$rand+1] or $A->[$i+1][$rand] or $A->[$i+1][$rand] or $A->[$i+1][$rand+1])
+      #   {
+      #     return 0;
+      #   }
+      #   else
+      #   {
+      #     $A->[$i][$rand] = 1;
+      #     return 1;
+      #   }
+      # }
+      # else
+      # {
+      #    if($A->[$i][$rand-1] or $A->[$i][$rand+1] or $A->[$i-1][$rand-1] or $A->[$i-1][$rand]
+      #     or $A->[$i-1][$rand+1] or $A->[$i+1][$rand-1] or $A->[$i+1][$rand] or $A->[$i+1][$rand+1])
+      #   {
+      #     return 0;
+      #   }
+      #   else
+      #   {
+      #     $A->[$i][$rand] = 1;
+      #     return 1;
+      #   }
+      # }
+
     }
+    # если занято, то return 0
+    else
+      {
+        return 0;
+      }
 
 }
 
 sub set_two
 {
-  my $rand = shift;
-  say "Two";
+  my $rand = int(rand(9));
+  my $i = int(rand(9));
 }
 
 sub set_three
 {
-  my $rand = shift;
-  say "Three";
+  my $rand = int(rand(9));
+  my $i = int(rand(9));
 }
 
 sub set_four
 {
-  my $rand = shift;
-  say "Four";
+  my $rand = int(rand(9));
+  my $i = int(rand(9));;
 }
 
+##### проверка ячеек
+# проверяем всех соседей
+sub check_neighbors
+{
+  my ( $x, $y ) = @_;
+
+  if(_is_busy_top($x, $y) or _is_busy_left($x, $y) or _is_busy_right($x, $y) or _is_busy_bottom($x, $y) or _is_busy_cross_left_top($x, $y) or _is_busy_cross_right_top($x, $y) or _is_busy_cross_left_bottom($x, $y) or _is_busy_cross_right__bottom($x, $y))
+  {
+    return 1;
+  }
+  else
+  {
+    return 0;
+  }
+}
+# текущая ячейка
+sub _is_busy
+{
+  my ( $x, $y ) = @_;
+  return 1 if $A->[$x][$y];
+  return 0;
+}
+# проверка вершины
+sub _is_busy_top
+{
+  my ( $x, $y ) =@_;
+  # обрпаботка 0
+  $y = $y ? $y-1 : $y;
+  return 1 if $A->[$x][$y];
+  return 0;
+}
+# проверка слева
+sub _is_busy_left
+{
+  my ( $x, $y ) =@_;
+  # обрпаботка 0
+  $x = $x ? $x-1 : $x;
+  return 1 if $A->[$x][$y];
+  return 0;
+}
+# проверка справа
+sub _is_busy_right
+{
+  my ( $x, $y ) =@_;
+  return 1 if $A->[$x][$y+1];
+  return 0;
+}
+# проверка низа
+sub _is_busy_bottom
+{
+  my ( $x, $y ) =@_;
+  return 1 if $A->[$x+1][$y];
+  return 0;
+}
+# проверка диаг. слева вверху
+sub _is_busy_cross_left_top
+{
+  my ( $x, $y ) =@_;
+  # обрпаботка 0
+  $x = $x ? $x-1 : $x;
+  $y = $y ? $y-1 : $y;
+  return 1 if $A->[$x][$y];
+  return 0;
+}
+# проверка диаг. справа вверху
+sub _is_busy_cross_right_top
+{
+  my ( $x, $y ) =@_;
+  # обрпаботка 0
+  $y = $y ? $y-1 : $y;
+  return 1 if $A->[$x+1][$y-1];
+  return 0;
+}
+# проверка диаг. слева внизу
+sub _is_busy_cross_left_bottom
+{
+  my ( $x, $y ) =@_;
+  # обрпаботка 0
+  $x = $x ? $x-1 : $x;
+  return 1 if $A->[$x-1][$y+1];
+  return 0;
+}
+# проверка диаг. справа внизу
+sub _is_busy_cross_right__bottom
+{
+  my ( $x, $y ) =@_;
+  return 1 if $A->[$x+1][$y+1];
+  return 0;
+}
+
+#####
 package SFDraw;
 
 sub new
